@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 需要设置表名，主键名，javaBean中的字段 -->
+<rouse-mapping>
+	<class name="User" table="t_user" >
+		
+		<!-- 不支持使用自动增长的id类型，只支持字符串类型的id主键 -->
+ 		<id name="userid" column="userid" type="string"></id>
+ 		<property name="username" column="username" type="string"></property>
+ 		<property name="password" column="password" type="string"></property>
+ 		
+ 	</class>
+</rouse-mapping>
