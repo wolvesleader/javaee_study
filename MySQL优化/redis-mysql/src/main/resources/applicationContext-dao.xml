@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+   ">
+	<context:component-scan base-package="com.quincy.jedis" />
+
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		  destroy-method="close">
+		<property name="url" value="jdbc:mysql://10.211.55.4:3306/mysqldemo" />
+		<property name="username" value="root" />
+		<property name="password" value="java" />
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="maxActive" value="500" />
+		<property name="minIdle" value="5" />
+		<property name="initialSize" value="100" />
+
+	</bean>
+
+	<!--<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"-->
+		<!--destroy-method="close">-->
+		<!--<property name="jdbcUrl" value="jdbc:mysql://10.211.55.4:3306/mysqldemo?useUnicode=true&amp;characterEncoding=UTF-8" />-->
+		<!--<property name="user" value="root" />-->
+		<!--<property name="password" value="java" />-->
+		<!--<property name="driverClass" value="com.mysql.jdbc.Driver" />-->
+		<!--&lt;!&ndash; 初始化池大小 &ndash;&gt;-->
+		<!--<property name="initialPoolSize" value="50" />-->
+		<!--&lt;!&ndash; 最大空闲时间 &ndash;&gt;-->
+		<!--<property name="maxIdleTime" value="1800" />-->
+		<!--&lt;!&ndash; 最多有多少个连接 &ndash;&gt;-->
+		<!--<property name="maxPoolSize" value="60" />-->
+		<!--&lt;!&ndash; 最少几个连接 &ndash;&gt;-->
+		<!--<property name="minPoolSize" value="3" />-->
+		<!--&lt;!&ndash;<property name="acquireIncrement" value="1" />&ndash;&gt;-->
+		<!--&lt;!&ndash;<property name="checkoutTimeout" value="5000" />&ndash;&gt;-->
+		<!--&lt;!&ndash;<property name="idleConnectionTestPeriod" value="90" />&ndash;&gt;-->
+	<!--</bean>-->
+
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="100"/> <!--最大能够保持idel状态的对象数-->
+		<property name="maxTotal" value="500"/><!--最大分配的对象数-->
+		<property name="maxWaitMillis" value="1800"/>
+		<property name="testOnBorrow" value="true"/><!--当调用borrow Oject方法时，是否进行有效性检查-->
+	</bean>
+
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+		<!--<constructor-arg index="0" ref="jedisPoolConfig" />-->
+		<constructor-arg name="host" value="10.211.55.4" />
+		<constructor-arg name="port" value="6379" />
+	</bean>
+	<bean id="jedisClientPool" class="com.quincy.jedis.JedisClientPool"/>
+
+	<!--<bean id="jedisCluster" class="redis.clients.jedis.JedisCluster">-->
+		<!--<constructor-arg name="nodes">-->
+			<!--<set>-->
+				<!--<bean class="redis.clients.jedis.HostAndPort">-->
+					<!--<constructor-arg name="host" value="10.211.55.4"/>-->
+					<!--<constructor-arg name="port" value="7001"/>-->
+				<!--</bean>-->
+				<!--<bean class="redis.clients.jedis.HostAndPort">-->
+					<!--<constructor-arg name="host" value="10.211.55.4"/>-->
+					<!--<constructor-arg name="port" value="7002"/>-->
+				<!--</bean>-->
+				<!--<bean class="redis.clients.jedis.HostAndPort">-->
+					<!--<constructor-arg name="host" value="10.211.55.4"/>-->
+					<!--<constructor-arg name="port" value="7003"/>-->
+				<!--</bean>-->
+				<!--<bean class="redis.clients.jedis.HostAndPort">-->
+					<!--<constructor-arg name="host" value="10.211.55.4"/>-->
+					<!--<constructor-arg name="port" value="7004"/>-->
+				<!--</bean>-->
+				<!--<bean class="redis.clients.jedis.HostAndPort">-->
+					<!--<constructor-arg name="host" value="10.211.55.4"/>-->
+					<!--<constructor-arg name="port" value="7005"/>-->
+				<!--</bean>-->
+				<!--<bean class="redis.clients.jedis.HostAndPort">-->
+					<!--<constructor-arg name="host" value="10.211.55.4"/>-->
+					<!--<constructor-arg name="port" value="7006"/>-->
+				<!--</bean>-->
+			<!--</set>-->
+		<!--</constructor-arg>-->
+	<!--</bean>-->
+	<!--<bean id="jedisClientCluster" class="com.quincy.jedis.JedisClientCluster"/>-->
+
+</beans>
