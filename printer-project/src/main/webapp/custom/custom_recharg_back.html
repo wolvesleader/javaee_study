@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>充值页面</title>
+    <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+</head>
+<body>
+
+<div style="margin:0 auto;box-shadow: #0b97c4; padding:30px;width: 600px; height: 300px; border: 1px #B0E2FF dashed">
+    <form class="layui-form">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">充值金额</label>
+            <div class="layui-input-block">
+                <select id="rechargeId" name="recharge" lay-filter="aihao">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+
+                <input type="button" class="layui-btn" onclick="studentRecharge()" value="立即充值" lay-filter="demo1"></input>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+<script src="/js/vendors/jquery/dist/jquery.min.js"></script>
+<script src="/js/utils.js"></script>
+<script src="../bootstrap/js/bootstrap.js" charset="utf-8"></script>
+<script src="../js/custom.js"></script>
+<script src="../js/base.js"></script>
+<script src="/js/jquery.url.js"></script>
+<script src="../layui/layui.all.js" charset="utf-8"></script>
+<script type="application/javascript">
+
+
+    //学生充值
+    function studentRecharge(){
+        var id = $.url.param("id");
+        if (id == undefined){
+            window.location.href = "/custom/custom_login.html";
+        }
+        var param = {};
+        param.url = "/student/studentRecharge";
+        var map = $.customMap();
+        map.put("id",id);
+        map.put("recharge",$("#rechargeId").val());
+
+
+        var customMapToString = $.customMapToString(map);
+        param.requestParam = customMapToString;
+        var resultData = $.getBase(param).responseJSON;
+        if (resultData != undefined && resultData.statusCode == 200){
+            window.location.href = "/custom/custom_main.html";
+        } else{
+            window.location.href = "/custom/custom_login.html";
+        }
+    }
+</script>
+</html>

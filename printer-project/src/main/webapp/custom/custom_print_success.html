@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>打印成功</title>
+    <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container" >
+        <div class="row" style="height: 250px">
+            <div class="col-md-6 text-center"></div>
+            <div class="col-md-6 text-center"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 text-right">
+                <button type="button" onclick="continuePrint()" class="btn btn-primary">继续打印</button>
+            </div>
+            <div class="col-md-6">
+                <button type="button" onclick="logout()" class="btn btn-success">注销登陆</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/js/vendors/jquery/dist/jquery.min.js"></script>
+<script src="../layui/layui.js" charset="utf-8"></script>
+<script src="/js/utils.js"></script>
+<script src="../bootstrap/js/bootstrap.js" charset="utf-8"></script>
+<script src="../js/custom.js"></script>
+<script src="../js/base.js"></script>
+<script>
+    function continuePrint(){
+      window.location.href = "/custom/custom_main.html";
+    }
+    function logout() {
+        var param = {};
+        param.url = "/custom/studentLogout";
+        var resultData = $.getBase(param).responseJSON;
+        if (resultData.statusCode == 200){
+            alert(resultData.message);
+            window.location.href ="/custom/custom_printer_login.html";
+        } else{
+            window.location.href = "#"
+        }
+    }
+</script>
+</html>

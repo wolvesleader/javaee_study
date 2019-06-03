@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订单详情</title>
+    <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+</head>
+<body>
+
+<div style="margin:0 auto;box-shadow: #0b97c4; padding:30px;width: 600px; height: 450px; border: 1px #B0E2FF dashed">
+    <form class="layui-form" id="formOrderDesc">
+        <div class="layui-form-item">
+            <label class="layui-form-label">文件名称</label>
+            <div class="layui-input-block">
+                <input type="text" readonly="readonly" name="printerUrl" lay-verify="title"   class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">打印数量</label>
+            <div class="layui-input-block">
+                <input type="text" readonly="readonly" name="printerNumber" lay-verify="required"  class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">打印尺寸</label>
+            <div class="layui-input-block">
+                <input type="text" readonly="readonly" name="printerSize" lay-verify="required"  class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">打印颜色</label>
+            <div class="layui-input-block">
+                <input type="text" readonly="readonly" name="printerColor" lay-verify="identity" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">单双面</label>
+            <div class="layui-input-block">
+                <input type="text" readonly="readonly" name="printerFace" lay-verify="identity"  class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单总金额</label>
+            <div class="layui-input-block">
+                <input type="text" readonly="readonly" name="totalOrderMoney" lay-verify="identity"  class="layui-input">
+            </div>
+        </div>
+        <button type="button" class="layui-btn" style="margin-left: 110px;" onclick="printFile()"  class="btn btn-primary">打印文件</button>
+    </form>
+</div>
+
+</body>
+<script src="/js/vendors/jquery/dist/jquery.min.js"></script>
+<script src="/js/utils.js"></script>
+<script src="../bootstrap/js/bootstrap.js" charset="utf-8"></script>
+<script src="../layui/layui.js" charset="utf-8"></script>
+<script src="../js/custom.js"></script>
+<script src="../js/base.js"></script>
+<script src="/js/jquery.url.js"></script>
+<script>
+    function printFile(){
+        var param = {};
+        param.url = "/custom/printFile";
+        param.requestParam = $("form").serialize();
+        var resultData = $.getBasePost(param).responseJSON;
+        if (resultData.statusCode == 200){
+            window.location.href = "custom_print_success.html";
+        }else if (resultData.statusCode == 203) {
+            //用户没有登陆
+            window.location.href = "custom_login.html";
+        }else if (resultData.statusCode == 401) {
+            //学生账户余额不足
+            //弹出一个公告层，去充值
+            //window.location.href = "custom_recharge.html?id="+resultData.data.id;
+            window.pay(resultData.data.id);
+
+        }else{
+            window.location.href = "#";
+        }
+    };
+
+    window.onload =  function orderDesc(){
+
+        var id = $.url.param("id");
+        var param = {};
+        param.url = "/custom/findOrderById";
+
+        var map = $.customMap();
+        map.put("id",id);
+        var customMapToString = $.customMapToString(map);
+
+        param.requestParam = customMapToString;
+        var resultData = $.getBase(param).responseJSON;
+        if (resultData.statusCode == 200){
+            $("#formOrderDesc").setForm(resultData.data);
+        } else{
+            window.location.href = "#"
+        }
+    };
+    //学生充值
+    function studentRecharge(studentId,result){
+        var param = {};
+        param.url = "/student/studentRecharge";
+        var map = $.customMap();
+        map.put("id",studentId);
+        map.put("recharge",result);
+
+        var customMapToString = $.customMapToString(map);
+        param.requestParam = customMapToString;
+        var resultData = $.getBase(param).responseJSON;
+        if (resultData != undefined && resultData.statusCode == 200){
+            //充值成功，关闭弹出层
+            //window.location.href = "/custom/custom_main.html";
+            alert("充值成功");
+        } else{
+            //充值失败，关闭弹出层
+            //window.location.href = "/custom/custom_login.html";
+            alert(resultData.message);
+        }
+    }
+
+    var result = 10;
+    function callback(value){
+        result = value;
+    }
+
+    layui.use(['layer'], function(){ //独立版的layer无需执行这一句
+        var $ = layui.jquery,layer = layui.layer;//独立版的layer无需执行这一句
+        window.pay = function (studentId) {
+            layer.open({
+                type: 2
+                ,title: "余额不足请充值" //不显示标题栏
+                ,closeBtn: false
+                ,area: ["610px","450px"]
+                ,shade: 0.5
+                ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                ,btn: ['充值', '取消']
+                ,btnAlign: 'c'
+                ,moveType: 1 //拖拽模式，0或者1
+                ,content: "custom_recharge.html"
+                ,success: function(layero){
+                    var btn = layero.find('.layui-layer-btn');
+                    btn.find('.layui-layer-btn0').click(function () {
+                        //alert(studentId + "==" + result);
+                        studentRecharge(studentId,result);
+                    });
+                }
+            });
+        }
+
+    });
+</script>
+
+</html>

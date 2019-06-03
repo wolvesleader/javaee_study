@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.greenvillage.mapper.StudentMapper" >
+
+    <insert id="registerStudent" parameterType="com.greenvillage.pojo.Student" >
+        insert into student (userName,realName,password,accountBalance,number)
+        values (#{userName},#{realName},#{password},#{accountBalance},#{number})
+    </insert>
+
+    <select id="findAllStudent"  resultType="com.greenvillage.pojo.Student" >
+        select * from student
+    </select>
+    <select id="findById" parameterType="string" resultType="com.greenvillage.pojo.Student">
+        select * from student where id = #{id }
+    </select>
+
+    <select id="findByNumberAndPassword" parameterType="string" resultType="com.greenvillage.pojo.Student">
+        select * from student where number = #{0} and password = #{1}
+    </select>
+
+    <update id="updateById"  parameterType="com.greenvillage.pojo.Student">
+        UPDATE student
+        <trim prefix="set" suffixOverrides=",">
+            <if test="number!=null">number=#{number},</if>
+            <if test="userName!=null">userName=#{userName},</if>
+            <if test="realName!=null">realName=#{realName},</if>
+            <if test="password!=null">password=#{password},</if>
+            <if test="accountBalance!=null">accountBalance=#{accountBalance},</if>
+        </trim>
+        WHERE id=#{id}
+    </update>
+
+    <delete id="deleteById" parameterType="string">
+        delete from student where id = #{id}
+    </delete>
+
+</mapper>

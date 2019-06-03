@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>充值页面</title>
+    <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+</head>
+<body>
+
+<div style="margin:0 auto;box-shadow: #0b97c4; width: 600px; height: 300px;">
+    <form class="layui-form" style="margin-top: 50px">
+        <div class="layui-form-item" style="margin-right: 20px;">
+            <label class="layui-form-label">充值金额</label>
+            <div class="layui-input-block">
+                <div class="layui-form">
+                    <select id="rechargeId" name="rechargeId" lay-filter="rechargeId">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+<script src="/js/vendors/jquery/dist/jquery.min.js"></script>
+<script src="/js/utils.js"></script>
+<script src="../bootstrap/js/bootstrap.js" charset="utf-8"></script>
+<script src="../js/custom.js"></script>
+<script src="../js/base.js"></script>
+<script src="/js/jquery.url.js"></script>
+<script src="../layui/layui.all.js" charset="utf-8"></script>
+<script>
+
+    layui.use(['layer','form'], function(){ //独立版的layer无需执行这一句
+        var $ = layui.jquery
+        var layer = layui.layer,form = layui.form; //独立版的layer无需执行这一句
+
+        form.on('select',function (data) {
+            //console.log(id + "=="+ data.value);
+            //alert("=="+ data.value);
+            parent.callback(data.value);
+        })
+
+    });
+</script>
+</html>

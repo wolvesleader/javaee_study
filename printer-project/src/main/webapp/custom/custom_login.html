@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>学生登陆</title>
+
+    <!-- Bootstrap -->
+    <link href="/js/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/js/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="/js/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="/js/vendors/animate.css/animate.min.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="/css/custom.css" rel="stylesheet">
+  </head>
+
+  <body class="login">
+    <div>
+      <a class="hiddenanchor" id="signup"></a>
+      <a class="hiddenanchor" id="signin"></a>
+
+      <div class="login_wrapper">
+        <div class="animate form login_form">
+          <section class="login_content">
+            <form  id="studentLogin">
+              <h1>学 生 登 陆</h1>
+              <div>
+                <input type="text" class="form-control" name="number" placeholder="输入学号" required="" />
+              </div>
+              <div>
+                <input type="password" class="form-control" name="password" placeholder="输入密码" required="" />
+              </div>
+              <div>
+                <a class="btn btn-default submit" href="javascript:void(0)" onclick="custom_studentLogin()">登陆</a>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <p class="change_link">没有账户?
+                  <a href="#signup" class="to_register"> 注册账户 </a>
+                </p>
+
+                <div class="clearfix"></div>
+                <br />
+              </div>
+            </form>
+          </section>
+        </div>
+
+
+        <div id="register" class="animate form registration_form">
+          <section class="login_content">
+            <form id="registerStudent">
+              <h1>学 生 注 册</h1>
+              <div>
+                <input type="text" name="number" class="form-control" placeholder="输入学号" required="" />
+              </div>
+              <div>
+                <input type="text" name="realName" class="form-control" placeholder="输入姓名" required="" />
+              </div>
+              <div>
+                <input type="text" name="userName" class="form-control" placeholder="输入用户名" required="" />
+              </div>
+              <div>
+                <input type="password" name="password" class="form-control" placeholder="输入密码" required="" />
+              </div>
+              <div>
+                <a class="btn btn-default submit"  href="javascript:void(0)" onclick="registerStudent()">注册</a>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <p class="change_link">已经有账户 ?
+                  <a href="#signin" class="to_register"> 登陆 </a>
+                </p>
+
+                <div class="clearfix"></div>
+                <br />
+
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/vendors/jquery/dist/jquery.min.js"></script>
+  <script src="/js/base.js"></script>
+ <script type="application/javascript">
+
+   
+   function registerStudent() {
+     var param = {};
+     param.url = "/student/registerStudent";
+     param.requestParam = $("#registerStudent").serialize();
+     var resultData = $.getBase(param).responseJSON;
+     if (resultData.statusCode == 200){
+       window.location.href = "/custom/custom_login.html"
+     } else{
+       window.location.href = "/custom/custom_login.html"
+     }
+   }
+   
+   function custom_studentLogin(){
+     var param = {};
+     param.url = "/custom/studentLogin";
+     param.requestParam = $("#studentLogin").serialize();
+     var resultData = $.getBase(param).responseJSON;
+     if (resultData.statusCode == 200){
+       window.location.href = "/custom/custom_main.html"
+     } else{
+       window.location.href = "/custom/custom_login.html"
+     }
+   }
+
+ </script>
+</html>

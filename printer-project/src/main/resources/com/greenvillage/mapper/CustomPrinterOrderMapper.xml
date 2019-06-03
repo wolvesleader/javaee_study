@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.greenvillage.mapper.CustomPrinterOrderMapper" >
+
+
+    <insert id="save" parameterType="com.greenvillage.pojo.PrintOrder" >
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into printorder (printerUrl,printerNumber,printerSize,printerColor,printerFace,totalOrderMoney)
+        values (#{printerUrl},#{printerNumber},#{printerSize},#{printerColor},#{printerFace},#{totalOrderMoney})
+    </insert>
+
+
+    <select id="findOrderById" parameterType="string" resultType="com.greenvillage.pojo.PrintOrder">
+        select * from printorder where id = #{id}
+    </select>
+</mapper>

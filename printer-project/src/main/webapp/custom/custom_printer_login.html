@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>打印机登陆</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="signin.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <form class="form-signin">
+        <h2 class="form-signin-heading">打印机登陆</h2>
+
+        <input type="email" id="inputEmail" name="printerNumber" class="form-control" placeholder="输入打印机账号" required autofocus>
+
+        <div style="height: 20px"></div>
+        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="密码" required>
+        <div style="height: 20px"></div>
+        <button class="btn btn-lg btn-primary btn-block" onclick="custom_printerLogin()" type="button">登陆</button>
+    </form>
+
+</div> <!-- /container -->
+</body>
+<script src="/js/vendors/jquery/dist/jquery.min.js"></script>
+<script src="/js/base.js"></script>
+<script type="application/javascript">
+
+
+
+    function custom_printerLogin(){
+        var param = {};
+        param.url = "/custom/printerLogin";
+        param.requestParam = $("form").serialize();
+        var resultData = $.getBase(param).responseJSON;
+        if (resultData != undefined && resultData.statusCode == 200){
+            window.location.href = "/custom/custom_login.html"
+        } else{
+            window.location.href = "/custom/custom_printer_login.html"
+        }
+    }
+
+</script>
+</html>

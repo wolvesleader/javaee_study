@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>创建订单</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+    <style>
+        .myfilebtn {
+            width: 20%;
+            position: relative;
+            background: #5bc0de;
+            border-radius: 4px;
+            height: 30px;
+            color:white;
+            line-height: 30px;
+        }
+        .myfilebtn label {
+            display: block;
+            width: 100%;
+            height: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div style="margin:0 auto;box-shadow: #0b97c4; padding:30px;width: 600px; height: 450px; border: 1px #B0E2FF dashed">
+
+    <button type="button" id="btnfile" class="btn btn-primary" style="margin-left: 110px;" data-toggle="modal" data-target="#myModal">
+        上传文件
+    </button>
+    <form class="layui-form">
+
+        <input type="hidden" name="printerUrl" id="hiddenInput">
+        <div style="height: 20px;"></div>
+        <div class="layui-form-item">
+            <div class="layui-form-item">
+                <label class="layui-form-label">张数</label>
+                <div class="layui-input-block">
+                    <input type="text" name="printerNumber" lay-verify="title"  placeholder="打印张数" class="layui-input">
+                </div>
+            </div>
+            <label class="layui-form-label">尺寸</label>
+            <div class="layui-input-block">
+                <select name="printerSize" lay-filter="aihao">
+                    <option value="A4">A4</option>
+                    <option value="A3">A3</option>
+                </select>
+            </div>
+            <div style="height: 20px;"></div>
+            <label class="layui-form-label">颜色</label>
+            <div class="layui-input-block">
+                <select name="printerColor" lay-filter="aihao">
+                    <option value="黑白">黑白</option>
+                    <option value="彩印" >彩印</option>
+                </select>
+            </div>
+            <div style="height: 20px;"></div>
+            <label class="layui-form-label">正反面</label>
+            <div class="layui-input-block">
+                <select name="printerFace" lay-filter="aihao">
+                    <option value="单面">单面</option>
+                    <option value="双面" >双面</option>
+                </select>
+            </div>
+        </div>
+
+
+        <button type="button" style="margin-left: 110px;" onclick="savePrinterOrder()"  class="btn btn-primary">保存数据</button>
+
+
+    </form>
+
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">选择文件</h4>
+            </div>
+            <div class="modal-body">
+                <div class="myfilebtn" >
+                    <label for="upload">添加文件</label><input id="upload" type="file" name="files" multiple="multiple" style="display: none;border: 1px red solid;width: 100px;height: 100px;" />
+                </div>
+                <div id="addfiles">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="uploadBtn">上传</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/vendors/jquery/dist/jquery.min.js"></script>
+<script src="/js/utils.js"></script>
+<script src="../bootstrap/js/bootstrap.js" charset="utf-8"></script>
+<script src="../layui/layui.js" charset="utf-8"></script>
+<script src="../js/custom.js"></script>
+<script src="../js/base.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+
+    function savePrinterOrder(){
+
+     /*   alert($("select[name='printerSize']").val());
+        alert($("select[name='printerColor']").val());
+        alert($("select[name='printerFace']").val());*/
+        var param = {};
+        param.url = "/custom/savePrinterOrder";
+        param.requestParam = $("form").serialize();
+        var resultData = $.getBasePost(param).responseJSON;
+        //window.location.href = "print_point.html";
+        //alert(resultData.data.id);
+        //跳转到订单详情页面
+        if (resultData.statusCode == 200 && resultData.message == "成功") {
+            window.location.href ="custom_order_desc.html?id="+resultData.data.id;
+        }
+
+
+    }
+    $(function () {
+
+
+
+        $("#btnfile").click(function () {
+            $("#addfiles").html("");
+        });
+        $.Utils.bindEvent($("#upload"),"change",function (ele) {
+
+            var fileSize = ele.files.length;
+            for (var i = 0; i < fileSize;i ++){
+                var objUrl = ele.files[i].name ;
+                if (objUrl) {
+                    $("#addfiles").append('<div style="margin: 20px;">'+ objUrl +'</div>');
+                }
+            }
+        });
+        $("#uploadBtn").click(function(){
+            var formData = new FormData();
+            var filesArray = $("#upload")[0].files;
+            for(var i = 0; i < filesArray.length;i ++){
+                formData.append('files', filesArray[i]);
+            }
+            $.ajax({
+                url: '/custom/upload',
+                type: 'POST',
+                cache: false,
+                dataType:"json",
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function(res) {
+                $('#myModal').modal('hide');
+                $("#hiddenInput").val(res);
+               // console.log(JSON.stringify(res));
+                alert("文件上传成功!");
+            }).fail(function(res) {
+                console.log("fail:" + res);
+            });
+        });
+    });
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+
+
+        //自定义验证规则
+        form.verify({
+            title: function(value){
+                if(value.length < 5){
+                    return '标题至少得5个字符啊';
+                }
+            }
+            ,pass: [
+                /^[\S]{6,12}$/
+                ,'密码必须6到12位，且不能出现空格'
+            ]
+            ,content: function(value){
+                layedit.sync(editIndex);
+            }
+        });
+
+
+    });
+</script>
+
+
+</body>
+</html>

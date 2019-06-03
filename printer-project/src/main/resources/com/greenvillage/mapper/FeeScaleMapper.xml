@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.greenvillage.mapper.FeeScaleMapper" >
+
+    <select id="findAllFeeScale"  resultType="com.greenvillage.pojo.FeeScale" >
+        select * from feescale
+    </select>
+
+    <select id="findById" parameterType="string" resultType="com.greenvillage.pojo.FeeScale">
+        select * from feescale where id = #{id }
+    </select>
+
+    <update id="updateById"  parameterType="com.greenvillage.pojo.FeeScale">
+        UPDATE feescale
+        <trim prefix="set" suffixOverrides=",">
+            <if test="payMoney!=null">payMoney=#{payMoney},</if>
+        </trim>
+        WHERE id=#{id}
+    </update>
+
+    <delete id="deleteById" parameterType="string">
+        delete from feescale where id = #{id}
+    </delete>
+
+    <select id="findFeeScaleByCondition" parameterType="com.greenvillage.pojo.PrintOrder" resultType="com.greenvillage.pojo.FeeScale">
+        select * from feescale where 1 = 1
+        <if test='printerSize != null'>
+            and printerSize=#{printerSize}
+        </if>
+        <if test='printerColor != null'>
+            and printerColor=#{printerColor}
+        </if>
+        <if test='printerFace != null'>
+            and printerFace=#{printerFace}
+        </if>
+    </select>
+
+</mapper>
